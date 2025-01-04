@@ -12,8 +12,3 @@ code {
 .cursor-pointer {
   cursor: pointer;
 }
-
-.custom-hover:hover {
-  background-color: #0d6efd;
-  color: #fff;
-}

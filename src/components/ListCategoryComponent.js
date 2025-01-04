@@ -1,8 +1,23 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { API_URL } from "../utils/constant";
-import { Col, Row } from "react-bootstrap";
-import ListGroupComponent from "./sub-components/ListGroupComponent";
+import { Col, Row, ListGroup } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faMartiniGlass,
+  faCheese,
+  faUtensils,
+} from "@fortawesome/free-solid-svg-icons";
+
+const Icon = ({ iconCategoryDetails }) => {
+  if (iconCategoryDetails === "Makanan")
+    return <FontAwesomeIcon icon={faUtensils} />;
+  if (iconCategoryDetails === "Minuman")
+    return <FontAwesomeIcon icon={faMartiniGlass} />;
+  if (iconCategoryDetails === "Cemilan")
+    return <FontAwesomeIcon icon={faCheese} />;
+  return;
+};
 
 export default class ListCategoryComponent extends Component {
   constructor(props) {
@@ -31,7 +46,12 @@ export default class ListCategoryComponent extends Component {
               categories.map((category) => {
                 return (
                   <>
-                    <ListGroupComponent key={category.id} category={category} />
+                    <ListGroup className="mb-2 cursor-pointer">
+                      <ListGroup.Item className="d-flex align-items-center gap-2">
+                        <Icon iconCategoryDetails={category.nama} />
+                        {category.nama}
+                      </ListGroup.Item>
+                    </ListGroup>
                   </>
                 );
               })}
