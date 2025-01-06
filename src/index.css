@@ -12,3 +12,8 @@ code {
 .cursor-pointer {
   cursor: pointer;
 }
+
+.category--active {
+  background-color: #0c6bfb;
+  color: #fff;
+}
