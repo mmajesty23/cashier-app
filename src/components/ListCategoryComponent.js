@@ -3,6 +3,23 @@ import { Col } from "react-bootstrap";
 import axios from "axios";
 import { API_URL } from "../utils/constant";
 import { ListGroup } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUtensils,
+  faMartiniGlass,
+  faCheese,
+} from "@fortawesome/free-solid-svg-icons";
+
+const Icon = ({ categoryValue }) => {
+  if (categoryValue === "Makanan")
+    return <FontAwesomeIcon icon={faUtensils} className="me-2" />;
+  if (categoryValue === "Minuman")
+    return <FontAwesomeIcon icon={faMartiniGlass} className="me-2" />;
+  if (categoryValue === "Cemilan")
+    return <FontAwesomeIcon icon={faCheese} className="me-2" />;
+
+  return;
+};
 
 export default class ListCategoryComponent extends Component {
   constructor(props) {
@@ -46,6 +63,7 @@ export default class ListCategoryComponent extends Component {
                     onClick={() => changeChoosenCategory(category.nama)}
                     style={{ cursor: "pointer" }}
                   >
+                    <Icon categoryValue={category.nama} />
                     {category.nama}
                   </ListGroup.Item>
                 );

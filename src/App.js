@@ -6,6 +6,10 @@ import { Container, Row, Col, Card } from "react-bootstrap";
 import axios from "axios";
 import { API_URL } from "./utils/constant.js";
 
+function formatNumberWithDots(number) {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -65,7 +69,9 @@ export default class App extends Component {
                           />
                           <Card.Body>
                             <Card.Title>{menu.nama}</Card.Title>
-                            <Card.Text>{menu.harga}</Card.Text>
+                            <Card.Text>
+                              {formatNumberWithDots(menu.harga)}
+                            </Card.Text>
                           </Card.Body>
                         </Card>
                       </Col>
