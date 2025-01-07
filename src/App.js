@@ -2,13 +2,10 @@ import React, { Component } from "react";
 import NavbarComponent from "./components/NavbarComponent.js";
 import ListCategoryComponent from "./components/ListCategoryComponent.js";
 import OrderSummaryComponent from "./components/OrderSummaryComponent.js";
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import axios from "axios";
 import { API_URL } from "./utils/constant.js";
-
-function formatNumberWithDots(number) {
-  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
+import ListMenuComponent from "./components/ListMenuComponent.js";
 
 export default class App extends Component {
   constructor(props) {
@@ -52,33 +49,8 @@ export default class App extends Component {
               changeChoosenCategory={this.changeChoosenCategory}
               choosenCategory={choosenCategory}
             />
-            <Col>
-              <h3>List Menu</h3>
-              <hr />
-              <Row>
-                {menus &&
-                  menus.map((menu) => {
-                    return (
-                      <Col md={4} className="mb-3" key={menu.id}>
-                        <Card className="shadow">
-                          <Card.Img
-                            variant="top"
-                            src={`/assets/images/${menu.category.nama.toLowerCase()}/${
-                              menu.gambar
-                            }`}
-                          />
-                          <Card.Body>
-                            <Card.Title>{menu.nama}</Card.Title>
-                            <Card.Text>
-                              {formatNumberWithDots(menu.harga)}
-                            </Card.Text>
-                          </Card.Body>
-                        </Card>
-                      </Col>
-                    );
-                  })}
-              </Row>
-            </Col>
+
+            <ListMenuComponent menus={menus} />
             <OrderSummaryComponent />
           </Row>
         </Container>
