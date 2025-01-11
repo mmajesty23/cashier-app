@@ -1,12 +1,36 @@
 import React, { Component } from "react";
-import { Col } from "react-bootstrap";
+import { Col, Row, Badge, ListGroup } from "react-bootstrap";
+import formatNumberWithDots from "../utils/helperFunction";
 
 export default class OrderSummaryComponent extends Component {
   render() {
+    const { carts } = this.props;
     return (
       <Col md={3}>
         <h3>Order Summary</h3>
         <hr />
+
+        <ListGroup variant="flush">
+          {carts &&
+            carts.map((item) => {
+              return (
+                <ListGroup.Item key={item.id}>
+                  <Row>
+                    <Col xs={2}>
+                      <Badge pill bg="primary">
+                        {item.orderAmmount}
+                      </Badge>
+                    </Col>
+
+                    <Col>
+                      <h5>{item.product.nama}</h5>
+                    </Col>
+                    <Col>Rp {formatNumberWithDots(item.price)}</Col>
+                  </Row>
+                </ListGroup.Item>
+              );
+            })}
+        </ListGroup>
       </Col>
     );
   }

@@ -6,6 +6,7 @@ import { Container, Row } from "react-bootstrap";
 import axios from "axios";
 import { API_URL } from "./utils/constant.js";
 import ListMenuComponent from "./components/ListMenuComponent.js";
+import Swal from "sweetalert2";
 
 export default class App extends Component {
   constructor(props) {
@@ -13,6 +14,7 @@ export default class App extends Component {
     this.state = {
       menus: [],
       choosenCategory: "Makanan",
+      carts: [],
     };
   }
 
@@ -23,6 +25,26 @@ export default class App extends Component {
         .then((res) => this.setState({ menus: res.data }));
     } catch (error) {
       console.log(error.message);
+    }
+
+    try {
+      axios
+        .get(`${API_URL}keranjangs`)
+        .then((res) => this.setState({ carts: res.data }));
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  componentDidUpdate(prevState) {
+    if (this.state.carts !== prevState.carts) {
+      try {
+        axios
+          .get(`${API_URL}keranjangs`)
+          .then((res) => this.setState({ carts: res.data }));
+      } catch (error) {
+        console.log(error.message);
+      }
     }
   }
 
@@ -37,8 +59,44 @@ export default class App extends Component {
     }
   };
 
+  addToCart = (order) => {
+    axios.get(`${API_URL}keranjangs?product.id=${order.id}`).then((res) => {
+      if (res.data.length === 0) {
+        const cart = {
+          orderAmmount: 1,
+          price: order.harga,
+          product: order,
+        };
+
+        axios.post(`${API_URL}keranjangs`, cart).then((res) => {
+          Swal.fire({
+            title: "Order Received!",
+            text: `${res.data.product.nama} added to cart!`,
+            icon: "success",
+          });
+        });
+      } else {
+        const cart = {
+          orderAmmount: res.data[0].orderAmmount + 1,
+          price: res.data[0].price + order.harga,
+          product: order,
+        };
+
+        axios
+          .put(`${API_URL}keranjangs/${res.data[0].id}`, cart)
+          .then((res) => {
+            Swal.fire({
+              title: "Order Received!",
+              text: `${res.data.product.nama} added to cart!`,
+              icon: "success",
+            });
+          });
+      }
+    });
+  };
+
   render() {
-    const { menus, choosenCategory } = this.state;
+    const { menus, choosenCategory, carts } = this.state;
 
     return (
       <>
@@ -50,8 +108,8 @@ export default class App extends Component {
               choosenCategory={choosenCategory}
             />
 
-            <ListMenuComponent menus={menus} />
-            <OrderSummaryComponent />
+            <ListMenuComponent menus={menus} addToCart={this.addToCart} />
+            <OrderSummaryComponent carts={carts} />
           </Row>
         </Container>
       </>
