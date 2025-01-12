@@ -36,18 +36,6 @@ export default class App extends Component {
     }
   }
 
-  componentDidUpdate(prevState) {
-    if (this.state.carts !== prevState.carts) {
-      try {
-        axios
-          .get(`${API_URL}keranjangs`)
-          .then((res) => this.setState({ carts: res.data }));
-      } catch (error) {
-        console.log(error.message);
-      }
-    }
-  }
-
   changeChoosenCategory = (categoryValue) => {
     this.setState({ choosenCategory: categoryValue, menus: [] });
     try {
@@ -62,35 +50,31 @@ export default class App extends Component {
   addToCart = (order) => {
     axios.get(`${API_URL}keranjangs?product.id=${order.id}`).then((res) => {
       if (res.data.length === 0) {
-        const cart = {
+        const carts = {
           orderAmmount: 1,
-          price: order.harga,
+          totalPrice: order.harga,
           product: order,
         };
-
-        axios.post(`${API_URL}keranjangs`, cart).then((res) => {
+        axios.post(`${API_URL}keranjangs`, carts).then((res) =>
           Swal.fire({
             title: "Order Received!",
             text: `${res.data.product.nama} added to cart!`,
             icon: "success",
-          });
-        });
+          })
+        );
       } else {
-        const cart = {
+        const carts = {
           orderAmmount: res.data[0].orderAmmount + 1,
-          price: res.data[0].price + order.harga,
+          totalPrice: res.data[0].totalPrice + order.harga,
           product: order,
         };
-
-        axios
-          .put(`${API_URL}keranjangs/${res.data[0].id}`, cart)
-          .then((res) => {
-            Swal.fire({
-              title: "Order Received!",
-              text: `${res.data.product.nama} added to cart!`,
-              icon: "success",
-            });
-          });
+        axios.put(`${API_URL}keranjangs/${res.data[0].id}`, carts).then((res) =>
+          Swal.fire({
+            title: "Order Received!",
+            text: `${res.data.product.nama} added to cart!`,
+            icon: "success",
+          })
+        );
       }
     });
   };
